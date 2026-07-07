@@ -1,6 +1,6 @@
 # Postamat(MVP)
 Project about placing orders by couriers in cells in postamat. Users can get placed order by receive code.
-It contains **only backend interface without any ui**(_for now_).
+It contains API(by default localhost:port/api/postamat/) and Frontend(by default localhost:port/).
 
 ---
 
