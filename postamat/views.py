@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .services import PostamatService
 from .models import Postamat
+from django.shortcuts import render, redirect
+from django.core.exceptions import ValidationError
 
 
 @csrf_exempt
@@ -61,3 +63,48 @@ def get_order(request, postamat_id) -> JsonResponse:
         return JsonResponse({'error': 'Postamat not found'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
+def index(request):
+    return render(request, 'postamat/index.html')
+
+
+def place_order_ui(request, postamat_id):
+    context = {'postamat_id': postamat_id}
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        user_phone = request.POST.get('user_phone')
+        if not order_id or not user_phone:
+            context['result'] = {'error': 'All fields needs to be filled'}
+        else:
+            try:
+                service = PostamatService(postamat_id)
+                result = service.place_order(order_id, user_phone)
+                context['result'] = {
+                    'success': f"Order {result['order_id']} placed in cell {result['cell_number']}. Code for user: {result['receive_code']}"
+                }
+            except ValidationError as e:
+                context['result'] = {'error': str(e)}
+            except Exception as e:
+                context['result'] = {'error': f'Error: {e}'}
+    return render(request, 'postamat/place_order.html', context)
+
+
+def get_order_ui(request, postamat_id):
+    context = {'postamat_id': postamat_id}
+    if request.method == 'POST':
+        receive_code = request.POST.get('receive_code')
+        if not receive_code:
+            context['result'] = {'error': 'Enter a code'}
+        else:
+            try:
+                service = PostamatService(postamat_id)
+                result = service.get_order(receive_code)
+                context['result'] = {
+                    'success': f"Your order {result['order_id']} is in a cell {result['cell_number']} is gived to you."
+                }
+            except ValidationError as e:
+                context['result'] = {'error': str(e)}
+            except Exception as e:
+                context['result'] = {'error': f'Error: {e}'}
+    return render(request, 'postamat/get_order.html', context)
