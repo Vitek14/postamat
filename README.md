@@ -32,6 +32,10 @@ pip install -r requirements.txt
 
 **By default, project uses in memory db and applies all migrations by running server.**
 
+4. Credentials:
+**you must** set up admin credentials. Examples of credentials placed in .env.example.
+Rename it to .env and change it
+
 ---
 
 # Usage
