@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Tests
         env:
-          SECRET_NICKNAME: ${{ secrets.SUPERUSER_NICKNAME }}
+          SUPERUSER_NICKNAME: ${{ secrets.SUPERUSER_NICKNAME }}
           SUPERUSER_EMAIL: ${{ secrets.SUPERUSER_EMAIL }}
           SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
         run: |
