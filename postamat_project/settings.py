@@ -76,11 +76,10 @@ WSGI_APPLICATION = 'postamat_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
-        # 'NAME': 'file::memory:?cache=shared',
-        # 'OPTIONS': {
-        #     'uri': True,
-        # }
+        'NAME': 'file::memory:?cache=shared',
+        'OPTIONS': {
+            'uri': True,
+        }
     }
 }
 
