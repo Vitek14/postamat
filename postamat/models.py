@@ -7,7 +7,6 @@ class Postamat(models.Model):
     id = models.BigAutoField(primary_key=True)
     address = models.CharField(max_length=200, verbose_name="Address")
     name = models.CharField(max_length=100, verbose_name="Name")
-    is_active = models.BooleanField(default=True, verbose_name="Active")
 
     def __str__(self):
         return f"{self.name} ({self.address})"
