@@ -1,3 +1,63 @@
-from django.shortcuts import render
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from .services import PostamatService
+from .models import Postamat
 
-# Create your views here.
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def place_order(request, postamat_id) -> JsonResponse:
+    """Endpoint to create an order for courier.
+
+    :param request: Http request object. Expects json like: {"order_id": "123", "user_phone": "+79991234567"}
+    :param postamat_id: string with postamat id
+    :return: JsonResponse with 200 status
+    :rtype: JsonResponse
+    :raises Http404: If postamat id is not valid or can't be found.
+    :raises Http400: If unknown error occurs.
+    """
+    try:
+        data = json.loads(request.body)
+        order_id = data.get('order_id')
+        user_phone = data.get('user_phone')
+        if not order_id or not user_phone:
+            return JsonResponse({'error': 'Missing order_id or user_phone'}, status=400)
+
+        service = PostamatService(postamat_id)
+        result = service.place_order(order_id, user_phone)
+        return JsonResponse(result, status=200)
+
+    except Postamat.DoesNotExist:
+        return JsonResponse({'error': 'Postamat not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_order(request, postamat_id) -> JsonResponse:
+    """Endpoint to get an order from courier.
+
+    :param request: Http request object. Expects json like: {"receive_code": "123456"}
+    :param postamat_id: string with postamat id
+    :return: JsonResponse with 200 status
+    :rtype: JsonResponse
+    :raises Http404: If postamat id is not valid or can't be found.
+    :raises Http400: If unknown error occurs.
+    """
+    try:
+        data = json.loads(request.body)
+        receive_code = data.get('receive_code')
+        if not receive_code:
+            return JsonResponse({'error': 'Missing receive_code'}, status=400)
+
+        service = PostamatService(postamat_id)
+        result = service.get_order(receive_code)
+        return JsonResponse(result, status=200)
+
+    except Postamat.DoesNotExist:
+        return JsonResponse({'error': 'Postamat not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)

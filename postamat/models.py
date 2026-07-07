@@ -4,6 +4,7 @@ from django.utils import timezone
 
 class Postamat(models.Model):
     """Postamat model."""
+    id = models.BigAutoField(primary_key=True)
     address = models.CharField(max_length=200, verbose_name="Address")
     name = models.CharField(max_length=100, verbose_name="Name")
     is_active = models.BooleanField(default=True, verbose_name="Active")
@@ -32,7 +33,7 @@ class Cell(models.Model):
 
 
 class Order(models.Model):
-    """Заказ, размещённый в постамате."""
+    """Order, placed in postamat."""
     STATUS_CHOICES = (
         ('placed', 'Placed'),
         ('received', 'Given'),
