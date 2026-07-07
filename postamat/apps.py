@@ -2,6 +2,10 @@ from django.apps import AppConfig
 from django.core.management import call_command
 from django.db.models.signals import post_migrate
 from django.db import connection
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class PostamatConfig(AppConfig):
@@ -18,8 +22,9 @@ class PostamatConfig(AppConfig):
     def _create_superuser(self):
         from django.contrib.auth.models import User
         if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-            print("Superuser 'admin' created (password: admin123)")
+            User.objects.create_superuser(os.environ["SUPERUSER_NICKNAME"],
+                                          os.environ["SUPERUSER_EMAIL"],
+                                          os.environ["SUPERUSER_PASSWORD"])
 
     def _create_superuser_on_migrate(self, sender, **kwargs):
         self._create_superuser()
