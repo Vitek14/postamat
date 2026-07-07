@@ -13,6 +13,7 @@ class PostamatService:
         self.postamat = Postamat.objects.get(id=postamat_id)
         self.notifier = NotificationClient()
 
+    @transaction.atomic
     def place_order(self, external_order_id: str, user_phone: str) -> dict:
         """Place order in postamat.
 
@@ -20,7 +21,7 @@ class PostamatService:
         :rtype: dict
         :raises: ValidationError in error cases(see below)
         """
-        if Order.objects.filter(external_order_id=external_order_id).exists():
+        if Order.objects.select_for_update().filter(external_order_id=external_order_id).exists():
             raise ValidationError("An order with this ID already exists.")
 
         # Trying to find empty cell
@@ -30,26 +31,23 @@ class PostamatService:
         ).first()
         if not free_cell:
             raise ValidationError("No free cells found in this postamat.")
-        free_cell.is_occupied = True
-        free_cell.save()
 
         receive_code = generate_receive_code()
         while Order.objects.filter(receive_code=receive_code).exists():
             receive_code = generate_receive_code()
 
-        with transaction.atomic():
-            free_cell.is_occupied = True
-            free_cell.save()
+        free_cell.is_occupied = True
+        free_cell.save()
 
-            # creating order
-            Order.objects.create(
-                external_order_id=external_order_id,
-                user_phone=user_phone,
-                receive_code=receive_code,
-                postamat=self.postamat,
-                cell=free_cell,
-                placed_at=datetime.now(UTC)
-            )
+        # creating order
+        Order.objects.create(
+            external_order_id=external_order_id,
+            user_phone=user_phone,
+            receive_code=receive_code,
+            postamat=self.postamat,
+            cell=free_cell,
+            placed_at=datetime.now(UTC)
+        )
 
         # Sending sms to user
         self.notifier.send_receive_code(user_phone, receive_code, external_order_id)
@@ -60,6 +58,7 @@ class PostamatService:
             'order_id': external_order_id,
         }
 
+    @transaction.atomic
     def get_order(self, receive_code: str) -> dict:
         """Get order from postamat with receive code. After that, status will change
 
@@ -80,12 +79,11 @@ class PostamatService:
             raise ValidationError("Order does not belongs to this postamat.")
 
         cell = order.cell
-        with transaction.atomic():
-            cell.is_occupied = False
-            cell.save()
-            order.status = 'received'
-            order.received_at = datetime.now(UTC)
-            order.save()
+        cell.is_occupied = False
+        cell.save()
+        order.status = 'received'
+        order.received_at = datetime.now(UTC)
+        order.save()
 
         return {
             'order_id': order.external_order_id,
