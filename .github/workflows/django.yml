@@ -27,8 +27,8 @@ jobs:
 
       - name: Run Tests
         env:
-          SECRET_KEY: ${{ secrets.SUPERUSER_NICKNAME }}
-          SUPERUSER_NAME: ${{ secrets.SUPERUSER_EMAIL }}
+          SECRET_NICKNAME: ${{ secrets.SUPERUSER_NICKNAME }}
+          SUPERUSER_EMAIL: ${{ secrets.SUPERUSER_EMAIL }}
           SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
         run: |
           python manage.py test postamat/tests/
