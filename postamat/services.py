@@ -24,13 +24,14 @@ class PostamatService:
             raise ValidationError("An order with this ID already exists.")
 
         # Trying to find empty cell
-        free_cell = Cell.objects.filter(
+        free_cell = Cell.objects.select_for_update().filter(
             postamat=self.postamat,
             is_occupied=False
         ).first()
-
         if not free_cell:
             raise ValidationError("No free cells found in this postamat.")
+        free_cell.is_occupied = True
+        free_cell.save()
 
         receive_code = generate_receive_code()
         while Order.objects.filter(receive_code=receive_code).exists():
@@ -67,7 +68,7 @@ class PostamatService:
         :raises: ValidationError in error cases(see below)
         """
         try:
-            order = Order.objects.get(
+            order = Order.objects.select_for_update().get(
                 receive_code=receive_code,
                 status='placed'
             )
