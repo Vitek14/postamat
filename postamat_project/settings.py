@@ -98,9 +98,9 @@ SOCIALACCOUNT_PROVIDERS = {
         "APPS": [
             {
                 "provider_id": "my-server",
-                "name": "My Login Server",
+                "name": "Keylock",
                 "client_id": "django-allauth",
-                "secret": "77vU0mmjotkSSbPuBHsFm8TZwISZwHLG",
+                "secret": os.environ.get('KEYLOCK_SECRET'),
                 "settings": {
                     "server_url": "http://localhost:8080/realms/myrealm/.well-known/openid-configuration",
                 },
