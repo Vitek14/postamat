@@ -24,8 +24,12 @@
     <h1>Postamat</h1>
     <div class="nav">
         <a href="{% url 'postamat:index' %}">Main</a>
-        <a href="{% url 'postamat:place_order_ui' postamat_id=1 %}">Place an order</a>
-        <a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order</a>
+        {% if user.groups.all.0.name == 'Couriers' or user.groups.all.0.name == 'Admins' %}
+            <a href="{% url 'postamat:place_order_ui' postamat_id=1 %}">Place an order</a>
+        {% endif %}
+        {% if user.groups.all.0.name == 'Users' or user.groups.all.0.name == 'Admins' %}
+            <a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order</a>
+        {% endif %}
     </div>
     <hr>
     {% block content %}{% endblock %}

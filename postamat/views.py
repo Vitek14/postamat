@@ -1,5 +1,7 @@
 import json
-from django.http import JsonResponse
+
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .services import PostamatService
@@ -11,9 +13,20 @@ from django.core.exceptions import ValidationError
 def admin_login_redirect(request):
     return redirect('/accounts/login/?next=/admin/')
 
+
+def user_in_groups(user, group_names):
+    from django.contrib.auth.models import Group
+    for name in group_names:
+        group, created = Group.objects.get_or_create(name=name)
+        if user.groups.filter(name=name).exists():
+            return True
+    return False
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
-def place_order(request, postamat_id) -> JsonResponse:
+@login_required
+def place_order(request, postamat_id) -> HttpResponseForbidden | JsonResponse:
     """Endpoint to create an order for courier.
 
     :param request: Http request object. Expects json like: {"order_id": "123", "user_phone": "+79991234567"}
@@ -22,7 +35,11 @@ def place_order(request, postamat_id) -> JsonResponse:
     :rtype: JsonResponse
     :raises Http404: If postamat id is not valid or can't be found.
     :raises Http400: If unknown error occurs.
+    :raises HttpResponseForbidden: If user does not have permission to place order.
     """
+    if not user_in_groups(request.user, ['Couriers', 'Admins']):
+        return HttpResponseForbidden("Only couriers and administrators can place orders")
+
     try:
         data = json.loads(request.body)
         order_id = data.get('order_id')
@@ -42,7 +59,8 @@ def place_order(request, postamat_id) -> JsonResponse:
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def get_order(request, postamat_id) -> JsonResponse:
+@login_required
+def get_order(request, postamat_id) -> HttpResponseForbidden | JsonResponse:
     """Endpoint to get an order from courier.
 
     :param request: Http request object. Expects json like: {"receive_code": "123456"}
@@ -51,7 +69,11 @@ def get_order(request, postamat_id) -> JsonResponse:
     :rtype: JsonResponse
     :raises Http404: If postamat id is not valid or can't be found.
     :raises Http400: If unknown error occurs.
+    :raises HttpResponseForbidden: If user does not have permission to get order.
     """
+    if not user_in_groups(request.user, ['Users', 'Admins']):
+        return HttpResponseForbidden("Only users and administrators can get orders")
+
     try:
         data = json.loads(request.body)
         receive_code = data.get('receive_code')
@@ -72,7 +94,11 @@ def index(request):
     return render(request, 'postamat/index.html')
 
 
+@login_required
 def place_order_ui(request, postamat_id):
+    if not user_in_groups(request.user, ['Couriers', 'Admins']):
+        return HttpResponseForbidden("You don't have enough rights to place orders")
+
     context = {'postamat_id': postamat_id}
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
@@ -93,7 +119,11 @@ def place_order_ui(request, postamat_id):
     return render(request, 'postamat/place_order.html', context)
 
 
+@login_required
 def get_order_ui(request, postamat_id):
+    if not user_in_groups(request.user, ['Users', 'Admins']):
+        return HttpResponseForbidden("You don't have enough rights to get orders")
+
     context = {'postamat_id': postamat_id}
     if request.method == 'POST':
         receive_code = request.POST.get('receive_code')
