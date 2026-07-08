@@ -1,3 +1,10 @@
 #!/bin/sh
-python manage.py migrate
-exec python manage.py runserver 0.0.0.0:8001
+# entrypoint.sh
+set -e
+
+# running migrations by default
+if [ "$RUN_MIGRATIONS" != "false" ]; then
+    python manage.py migrate
+fi
+
+exec "$@"

@@ -24,3 +24,4 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 8001
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
