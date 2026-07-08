@@ -1,3 +1,5 @@
+[![Django CI](https://github.com/Vitek14/postamat/actions/workflows/django.yml/badge.svg?branch=feature%2Fdocker)](https://github.com/Vitek14/postamat/actions/workflows/django.yml)
+
 # Postamat(MVP)
 Project about placing orders by couriers in cells in postamat. Users can get placed order by receive code.
 It contains API(by default localhost:port/api/postamat/) and Frontend(by default localhost:port/).
