@@ -2,6 +2,9 @@
 [![Build (amd64)](https://github.com/Vitek14/postamat/actions/workflows/build-amd64.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-amd64.yml)
 [![Build (arm64)](https://github.com/Vitek14/postamat/actions/workflows/build-arm64.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-arm64.yml)
 [![Build (armv7)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml)
+![Static Badge](https://img.shields.io/badge/python-%3E%3D3.10-blue)
+![GitHub repo size](https://img.shields.io/github/repo-size/Vitek14/postamat)
+
 
 # Postamat(MVP)
 Project about placing orders by couriers in cells in postamat. Users can get placed order by receive code.
