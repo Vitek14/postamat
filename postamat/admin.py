@@ -4,7 +4,7 @@ from .models import Postamat, Cell, Order
 
 @admin.register(Postamat)
 class PostamatAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'address', 'is_active')
+    list_display = ('id', 'name', 'address')
 
 
 @admin.register(Cell)
