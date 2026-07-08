@@ -7,10 +7,10 @@ ENV DJANGO_SETTINGS_MODULE=postamat_project.settings
 WORKDIR /app
 
 # Install build dependencies for psycopg2
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    libpq-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libffi-dev \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
