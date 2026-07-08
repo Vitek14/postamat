@@ -42,10 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'postamat',
+    "allauth_ui",
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.openid_connect'
+    'allauth.socialaccount.providers.openid_connect',
+    "widget_tweaks",
+    "slippers",
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
