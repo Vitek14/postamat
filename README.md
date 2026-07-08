@@ -1,3 +1,8 @@
+[![Django CI](https://github.com/Vitek14/postamat/actions/workflows/django.yml/badge.svg?branch=feature%2Fdocker)](https://github.com/Vitek14/postamat/actions/workflows/django.yml)
+[![Build (amd64)](https://github.com/Vitek14/postamat/actions/workflows/build-amd64.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-amd64.yml)
+[![Build (arm64)](https://github.com/Vitek14/postamat/actions/workflows/build-arm64.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-arm64.yml)
+[![Build (armv7)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml)
+
 # Postamat(MVP)
 Project about placing orders by couriers in cells in postamat. Users can get placed order by receive code.
 It contains API(by default localhost:port/api/postamat/) and Frontend(by default localhost:port/).

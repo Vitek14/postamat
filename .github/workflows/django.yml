@@ -10,6 +10,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: django_test_db
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,10 +40,21 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Verify PostgreSQL connection
+        run: |
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+          pg_isready -h localhost -p 5432 -U postgres_user
+
       - name: Run Tests
         env:
           SUPERUSER_NICKNAME: ${{ secrets.SUPERUSER_NICKNAME }}
           SUPERUSER_EMAIL: ${{ secrets.SUPERUSER_EMAIL }}
           SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: django_test_db
+          DB_USER: postgres_user
+          DB_PASSWORD: postgres_password
+          DB_HOST: localhost
+          DB_PORT: 5432
         run: |
           python manage.py test postamat/tests/
