@@ -44,8 +44,11 @@ INSTALLED_APPS = [
     'postamat',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.openid_connect'
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,6 +89,25 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
+        "APPS": [
+            {
+                "provider_id": "my-server",
+                "name": "My Login Server",
+                "client_id": "django-allauth",
+                "secret": "77vU0mmjotkSSbPuBHsFm8TZwISZwHLG",
+                "settings": {
+                    "server_url": "http://localhost:8080/realms/myrealm/.well-known/openid-configuration",
+                },
+            }
+        ]
+    }
+}
 
 WSGI_APPLICATION = 'postamat_project.wsgi.application'
 
