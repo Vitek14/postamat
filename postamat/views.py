@@ -8,6 +8,9 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 
 
+def admin_login_redirect(request):
+    return redirect('/accounts/login/?next=/admin/')
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def place_order(request, postamat_id) -> JsonResponse:
