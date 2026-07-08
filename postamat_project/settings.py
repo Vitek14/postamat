@@ -105,7 +105,7 @@ SOCIALACCOUNT_PROVIDERS = {
                 "client_id": "django-allauth",
                 "secret": os.environ.get('KEYLOCK_SECRET'),
                 "settings": {
-                    "server_url": "http://localhost:8080/realms/myrealm/.well-known/openid-configuration",
+                    "server_url": os.getenv("KEYCLOAK_SERVER")
                 },
             }
         ]

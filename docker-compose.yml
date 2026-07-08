@@ -18,6 +18,24 @@ services:
       timeout: 5s
       retries: 5
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: dev-file
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm-import.json:/opt/keycloak/data/import/realm.json:ro
+    command: [ "start-dev", "--import-realm" ]
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/myrealm" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
     container_name: postamat_app
@@ -28,8 +46,12 @@ services:
       - DB_NAME=postamat-project
       - DB_USER=postamat_user
       - DB_PASSWORD=postamat_pass
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_CLIENT_SECRET=secret-keycloak
     depends_on:
       db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
 
 volumes:
