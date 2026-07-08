@@ -50,6 +50,7 @@ jobs:
           SUPERUSER_NICKNAME: ${{ secrets.SUPERUSER_NICKNAME }}
           SUPERUSER_EMAIL: ${{ secrets.SUPERUSER_EMAIL }}
           SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DB_NAME: django_test_db
           DB_USER: postgres_user
           DB_PASSWORD: postgres_password
