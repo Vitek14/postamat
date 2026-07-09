@@ -22,6 +22,9 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ACCOUNT_FORMS = {
+    'signup': 'postamat.forms.CustomSignupForm',
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -110,7 +113,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "APPS": [
             {
                 "provider_id": "my-server",
-                "name": "Keylock",
+                "name": "Keycloak",
                 "client_id": "django-allauth",
                 "secret": os.environ.get('KEYLOCK_SECRET'),
                 "settings": {
@@ -130,7 +133,7 @@ WSGI_APPLICATION = 'postamat_project.wsgi.application'
 DATABASES['default'] = dj_database_url.config(
     default=os.environ.get('DATABASE_URL'),
     conn_max_age=600,
-    ssl_require=True
+    ssl_require=False if os.environ.get('GITHUB_ACTIONS') == 'true' else True
 )
 
 

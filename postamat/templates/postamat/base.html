@@ -14,9 +14,14 @@
         input[type="text"], input[type="number"] { padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 4px; }
         button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background: #218838; }
-        .result { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 4px; white-space: pre-wrap; }
-        .error { color: #dc3545; }
-        .success { color: #28a745; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; }
+        .error { color: #dc3545; background: #f8d7da; }
+        .success { color: #155724; background: #d4edda; }
+        .footer { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; text-align: center; }
+        .disabled-link { text-decoration: line-through; color: #6c757d; cursor: default; }
+        .disabled-link:hover { text-decoration: line-through; }
+        .hint { color: #dc3545; margin-left: 10px; font-size: 0.9em; }
+        .nav .hint { font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -32,7 +37,23 @@
         {% endif %}
     </div>
     <hr>
+
+    <!-- Global messages (error / success) -->
+    {% if result.error %}
+        <div class="result error">{{ result.error }}</div>
+    {% elif result.success %}
+        <div class="result success">{{ result.success|safe }}</div>
+    {% endif %}
+
     {% block content %}{% endblock %}
+
+    {% if not user.is_authenticated %}
+        <div class="footer">
+            Before using app, you must <a href="/accounts/?next={{ request.path }}">Login</a>
+        </div>
+    {% else %}
+        <a href="/accounts/">Accounts</a>
+    {% endif %}
 </div>
 </body>
 </html>

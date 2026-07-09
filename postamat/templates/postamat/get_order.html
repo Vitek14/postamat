@@ -1,7 +1,7 @@
 {% extends "postamat/base.html" %}
 
 {% block content %}
-    <h2>Получить заказ</h2>
+    <h2>Get an order</h2>
     <form method="post" action="{% url 'postamat:get_order_ui' postamat_id=postamat_id %}">
         {% csrf_token %}
         <div class="form-group">
@@ -10,13 +10,6 @@
         </div>
         <button type="submit">Receive</button>
     </form>
-
-    {% if result %}
-        <div class="result {% if result.error %}error{% else %}success{% endif %}">
-            <strong>Result:</strong><br>
-            {{ result|safe }}
-        </div>
-    {% endif %}
 
     <p><a href="{% url 'postamat:index' %}">To main</a></p>
 {% endblock %}

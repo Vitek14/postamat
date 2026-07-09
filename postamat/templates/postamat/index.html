@@ -2,10 +2,18 @@
 
 {% block content %}
     <h2>Welcome!</h2>
-    <p>Select an action:</p>
+    {% if user.is_authenticated %}
+        <p>Select an action:</p>
+    {% endif %}
     <ul>
-        <li><a href="{% url 'postamat:place_order_ui' postamat_id=1 %}">Place an order (courier)</a></li>
-        <li><a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order (user)</a></li>
+        {% if user.groups.all.0.name == 'Couriers' or user.groups.all.0.name == 'Admins' %}
+            <li><a href="{% url 'postamat:place_order_ui' postamat_id=1 %}">Place an order (courier)</a></li>
+            <li><p>To get order, you need to login as user</p></li>
+        {% endif %}
+        {% if user.groups.all.0.name == 'Users' or user.groups.all.0.name == 'Admins' %}
+            <li><a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order (user)</a></li>
+            <li><p>To place order, you need to login as courier</p></li>
+        {% endif %}
     </ul>
     <p><em>For this project(MVP) using postamat with ID=1. You can change it by replacing id in url.</em></p>
 {% endblock %}

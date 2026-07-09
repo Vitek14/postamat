@@ -15,12 +15,5 @@
     <button type="submit">Place</button>
 </form>
 
-{% if result %}
-    <div class="result {% if result.error %}error{% else %}success{% endif %}">
-        <strong>Result:</strong><br>
-        {{ result|safe }}
-    </div>
-{% endif %}
-
 <p><a href="{% url 'postamat:index' %}">To main</a></p>
 {% endblock %}
