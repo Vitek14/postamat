@@ -4,6 +4,7 @@ from . import views
 app_name = 'postamat'
 
 urlpatterns = [
+    path('admin/login/', views.admin_login_redirect),
     path('api/postamat/<int:postamat_id>/place/', views.place_order, name='place_order'),
     path('api/postamat/<int:postamat_id>/get/', views.get_order, name='get_order'),
     # UI pages
