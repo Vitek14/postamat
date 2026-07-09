@@ -52,5 +52,6 @@ jobs:
           SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DATABASE_URL: postgresql://postgres_user:postgres_password@localhost:5432/django_test_db?sslmode=disable
+          PGSSLMODE: disable
         run: |
           python manage.py test postamat/tests/
