@@ -13,6 +13,8 @@
         {% if user.groups.all.0.name == 'Users' or user.groups.all.0.name == 'Admins' %}
             <li><a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order (user)</a></li>
             <li><p>To place order, you need to login as courier</p></li>
+        {% else %}
+            <li><a href="{% url 'postamat:get_order_public' postamat_id=1 %}">Get an order(without register)</a></li>
         {% endif %}
     </ul>
     <p><em>For this project(MVP) using postamat with ID=1. You can change it by replacing id in url.</em></p>

@@ -1,13 +1,17 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+import secrets
+import string
+from django.contrib.auth.models import User, Group
 from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .services import PostamatService
-from .models import Postamat
+from .models import Postamat, Order
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
+from django.contrib.auth import login
 
 
 def admin_login_redirect(request):
@@ -21,6 +25,61 @@ def user_in_groups(user, group_names):
         if user.groups.filter(name=name).exists():
             return True
     return False
+
+
+def get_order_public(request, postamat_id) -> JsonResponse:
+    """
+    Public endpoint to get order by receive_code
+    """
+    context = {'postamat_id': postamat_id}
+
+    if request.method == 'POST':
+        receive_code = request.POST.get('receive_code')
+        if not receive_code:
+            context['result'] = {'error': 'Enter receive code'}
+        else:
+            try:
+                service = PostamatService(postamat_id)
+                result = service.get_order(receive_code)
+
+                order = Order.objects.get(external_order_id=result['order_id'])
+                phone = order.user_phone
+
+                # Define password criteria
+                length = 12
+                allowed_chars = string.ascii_letters + string.digits + string.punctuation
+
+                # Generate a cryptographically secure random string
+                raw_password = ''.join(secrets.choice(allowed_chars) for _ in range(length))
+
+                user, created = User.objects.get_or_create(username=phone)
+
+                if created:
+                    raw_password = secrets.token_urlsafe(16)
+                    user.set_password(raw_password)
+                    user.save()
+
+                    users_group, _ = Group.objects.get_or_create(name='Users')
+                    user.groups.add(users_group)
+
+                    context['generated_password'] = raw_password
+                else:
+                    context['result'] = {'info': 'You are already logged in.'}
+
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+                context['result'] = {
+                    'success': f"Your order {result['order_id']} is in a cell {result['cell_number']} is gived to you."
+                }
+
+            except Order.DoesNotExist:
+                context['result'] = {'error': "Order with that code can't be found"}
+            except ValidationError as e:
+                context['result'] = {'error': str(e)}
+            except Exception as e:
+                context['result'] = {'error': f'Error: {e}'}
+
+    return render(request, 'postamat/get_order_public.html', context)
 
 
 @csrf_exempt

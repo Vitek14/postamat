@@ -10,5 +10,6 @@ urlpatterns = [
     # UI pages
     path('', views.index, name='index'),
     path('postamat/<int:postamat_id>/place/', views.place_order_ui, name='place_order_ui'),
-    path('postamat/<int:postamat_id>/get/', views.get_order_ui, name='get_order_ui')
+    path('postamat/<int:postamat_id>/get/', views.get_order_ui, name='get_order_ui'),
+    path('get-order-public/<str:postamat_id>/', views.get_order_public, name='get_order_public')
 ]

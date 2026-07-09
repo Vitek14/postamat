@@ -1,0 +1,22 @@
+{% extends "postamat/base.html" %}
+
+{% block content %}
+    <h2>Get order (without register)</h2>
+    <p>Enter code, that you get from courier. We will automatically create a new account by your number.</p>
+    <form method="post" action="{% url 'postamat:get_order_public' postamat_id=postamat_id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="receive_code">Receive code:</label>
+            <input type="text" id="receive_code" name="receive_code" placeholder="123456" required>
+        </div>
+        <button type="submit">Get order</button>
+    </form>
+    {% if generated_password %}
+        <div class="result success">
+            <p><strong>You password for next login: {{ generated_password }}</strong></p>
+            <p style="color: #dc3545;">SAVE IT, it needs to next your login in account</p>
+        </div>
+    {% endif %}
+
+    <p><a href="{% url 'postamat:index' %}">To main</a></p>
+{% endblock %}
