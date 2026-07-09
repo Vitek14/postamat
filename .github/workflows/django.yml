@@ -56,5 +56,6 @@ jobs:
           DB_PASSWORD: postgres_password
           DB_HOST: localhost
           DB_PORT: 5432
+          DATABASE_URL: postgresql://postgres_user:postgres_password@localhost:5432/django_test_db
         run: |
           python manage.py test postamat/tests/
