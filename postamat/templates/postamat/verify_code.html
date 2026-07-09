@@ -1,0 +1,18 @@
+{% extends "postamat/base.html" %}
+
+{% block content %}
+    <h2>Get an order</h2>
+    <p>Enter a code, received from a courier</p>
+    <form method="post" action="{% url 'postamat:verify_code' postamat_id=postamat_id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="receive_code">Receive code:</label>
+            <input type="text" id="receive_code" name="receive_code" placeholder="123456" required>
+        </div>
+        <button type="submit">Check code</button>
+    </form>
+    {% if error %}
+        <div class="result error">{{ error }}</div>
+    {% endif %}
+    <p><a href="{% url 'postamat:index' %}">To main</a></p>
+{% endblock %}

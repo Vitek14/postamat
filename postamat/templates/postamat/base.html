@@ -35,7 +35,7 @@
         {% if user.groups.all.0.name == 'Users' or user.groups.all.0.name == 'Admins' %}
             <a href="{% url 'postamat:get_order_ui' postamat_id=1 %}">Get an order</a>
         {% else %}
-            <a href="{% url 'postamat:get_order_public' postamat_id=1 %}">Get an order</a>
+            <a href="{% url 'postamat:verify_code' postamat_id=1 %}">Get an order</a>
         {% endif %}
     </div>
     <hr>
