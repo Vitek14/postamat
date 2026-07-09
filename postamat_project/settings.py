@@ -19,11 +19,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-print("RAW DATABASE_URL:", os.environ.get('DATABASE_URL'))
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ACCOUNT_FORMS = {
+    'signup': 'postamat.forms.CustomSignupForm',
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -112,7 +113,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "APPS": [
             {
                 "provider_id": "my-server",
-                "name": "Keylock",
+                "name": "Keycloak",
                 "client_id": "django-allauth",
                 "secret": os.environ.get('KEYLOCK_SECRET'),
                 "settings": {

@@ -4,6 +4,7 @@
 [![Build (armv7)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml/badge.svg)](https://github.com/Vitek14/postamat/actions/workflows/build-armv7.yml)
 ![Static Badge](https://img.shields.io/badge/python-%3E%3D3.10-blue)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Vitek14/postamat)
+![Static Badge](https://img.shields.io/badge/Deploy-LIVE-green?style=for-the-badge&logo=render&link=https%3A%2F%2Fpostamat.onrender.com)
 
 
 # Postamat(MVP)
